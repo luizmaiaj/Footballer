@@ -1,7 +1,10 @@
 // main.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
-
 #include <iostream>
+#include <sstream>
+#include <string>
+
+using namespace std;
 
 //INCLUSAO DE BIBLIOTECAS
 #include <stdio.h>
@@ -10,18 +13,18 @@
 #include <string.h>
 #include <math.h>
 
-#define GENS 50                    //NUMERO DE GERACOES
-#define POP 500                    //TAMANHO DA POPULACAO
-#define CROSSING 350               //70% DA POPULACAO
-#define REPRODUCTION 150           //30% DA POPULACAO
-#define PI 3.14159265358979323846  //PI
-#define HEIGHT 200                 //ALTURA DA MATRIZ
-#define WIDTH 200                  //LARGURA DA MATRIZ
-#define RUNS 1                     //NUMERO DE TESTES DE CADA INDIVIDUOS
-#define EXECUTE 2000               //NUMERO DE EXECUCOES DA ARVORE POR TESTE
-#define LIMIT 1000                 //LIMITA COMPRIMENTO DO INDIVIDUO
-#define ANGLE 5                    //ANGULO QUE O ROBO SE VIRA
-#define HITDISTANCE 1              //DISTANCIA CONSIDERADA PARA TOQUE
+constexpr auto GENS = 50;                   //NUMERO DE GERACOES;
+constexpr auto POP = 500;					//TAMANHO DA POPULACAO;
+constexpr auto CROSSING = 350;              //70% DA POPULACAO;
+constexpr auto REPRODUCTION = 150;          //30% DA POPULACAO;
+constexpr auto PI = 3.14159265358979323846; //PI;
+constexpr auto HEIGHT = 200;                //ALTURA DA MATRIZ;
+constexpr auto WIDTH = 200;                 //LARGURA DA MATRIZ;
+constexpr auto RUNS = 1;                    //NUMERO DE TESTES DE CADA INDIVIDUOS;
+constexpr auto EXECUTE = 2000;              //NUMERO DE EXECUCOES DA ARVORE POR TESTE;
+constexpr auto LIMIT = 1000;                //LIMITA COMPRIMENTO DO INDIVIDUO;
+constexpr auto ANGLE = 5;                   //ANGULO QUE O ROBO SE VIRA;
+constexpr auto HITDISTANCE = 1;             //DISTANCIA CONSIDERADA PARA TOQUE;
 
 
 /*
@@ -1553,6 +1556,8 @@ struct tree* count(struct tree* pointer)
 			ptr = pointer->right;
 		}
 	}
+
+	return ptr;
 }
 
 //********************************
@@ -1590,7 +1595,7 @@ struct tree* read(struct tree* pointer)
 	aux->center = NULL;
 	aux->right = NULL;
 
-	fscanf(gene, "%c", &read_aux);
+	fscanf_s(gene, "%c", &read_aux);
 
 	pointer->info = read_aux;
 
@@ -1772,9 +1777,9 @@ int main(void)
 
 		rob[i].fitness = 0;
 
-		sprintf(filename, "rb%.3dtr.txt", i);
+		sprintf_s(filename, "rb%.3dtr.txt", i);
 
-		if ((gene = fopen(filename, "r")) == NULL)
+		if (fopen_s(&gene, filename, "r"))
 		{
 			printf("\n\tNao existem sucessores para \"%s\"!!!", filename);
 			printf("\n\tNovos individuos serao criados.\n\n");
@@ -1816,17 +1821,17 @@ int main(void)
 
 		i = 0;
 
-		sprintf(filename, "data%.3d.txt", i);
+		sprintf_s(filename, "data%.3d.txt", i);
 
-		while (gene = fopen(filename, "r"))
+		while (!fopen_s(&gene, filename, "r"))
 		{
 			fclose(gene);
 
 			i++;
-			sprintf(filename, "data%.3d.txt", i);
+			sprintf_s(filename, "data%.3d.txt", i);
 		}
 
-		if ((gene = fopen(filename, "w+")) == NULL)  //ARQUIVO COM DADOS DA SIMULACAO
+		if (!fopen_s(&gene, filename, "w+"))  //ARQUIVO COM DADOS DA SIMULACAO
 		{
 			printf("\n\n\tFalha ao tentar criar arquivo!!!\n\n");
 			exit(1);
@@ -2224,14 +2229,14 @@ int main(void)
 
 		i = 0;
 
-		sprintf(filename, "rb%.3d.tr", i);
+		sprintf_s(filename, "rb%.3d.tr", i);
 
-		while (gene = fopen(filename, "r"))
+		while (!fopen_s(&gene, filename, "r"))
 		{
 			fclose(gene);
 
 			i++;
-			sprintf(filename, "rb%.3d.tr", i);
+			sprintf_s(filename, "rb%.3d.tr", i);
 		}
 	}
 
@@ -2246,9 +2251,9 @@ int main(void)
 		{
 			char filename[20];
 
-			sprintf(filename, "rb%.3dtr.txt", i);
+			sprintf_s(filename, "rb%.3dtr.txt", i);
 
-			if ((gene = fopen(filename, "w+")) != NULL)
+			if (!fopen_s(&gene, filename, "w+"))
 			{
 				save(rob[aux].start);
 
@@ -2266,14 +2271,14 @@ int main(void)
 
 		i = 0;
 
-		sprintf(filename, "caminho%.3d.ppm", i);
+		sprintf_s(filename, "caminho%.3d.ppm", i);
 
-		while (gene = fopen(filename, "r"))
+		while (!fopen_s(&gene, filename, "r"))
 		{
 			fclose(gene);
 
 			i++;
-			sprintf(filename, "caminho%.3d.ppm", i);
+			sprintf_s(filename, "caminho%.3d.ppm", i);
 		}
 	}
 
@@ -2289,11 +2294,11 @@ int main(void)
 
 		aux = ((gen + 1) / GENS) * 100;
 
-		sprintf(filename, "caminho%.3d.ppm", i);
+		sprintf_s(filename, "caminho%.3d.ppm", i);
 
 		//SALVA UMA MATRIZ PARA UM ARQUIVO TIPO PPM
 
-		if ((gene = fopen(filename, "w+")) == NULL)
+		if (fopen_s(&gene, filename, "w+"))
 		{
 			printf("\n\n\tArquivo nao pode ser criado.\n\n");
 			exit(-1);
@@ -2311,11 +2316,11 @@ int main(void)
 
 		fclose(gene);  //FECHA ARQUIVO
 
-		//sprintf(command, "convert %s caminho%.3d.gif", filename, i);
+		//sprintf_s(command, "convert %s caminho%.3d.gif", filename, i);
 
 		//system(command);
 
-		//sprintf(command, "rm %s -f", filename);
+		//sprintf_s(command, "rm %s -f", filename);
 
 		//system(command);
 
