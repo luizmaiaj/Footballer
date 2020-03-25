@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include "Robot.h"
 
 using namespace std;
 
@@ -2289,8 +2290,7 @@ int main(void)
 	for (gen = 0; gen < GENS; gen++, i++)
 	{
 		char filename[20];
-		char command[50];
-		double aux, aux1, aux2;
+		double aux, aux1;
 
 		aux = ((gen + 1) / GENS) * 100;
 
