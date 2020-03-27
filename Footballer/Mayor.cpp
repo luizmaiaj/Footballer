@@ -4,6 +4,16 @@ Mayor::Mayor()
 {
 }
 
+Mayor::~Mayor()
+{
+	for (itRobot it = m_robots.begin(); it != m_robots.end(); it++)
+	{
+		Robot* pR = *it;
+
+		if (pR) delete pR;
+	}
+}
+
 uint Mayor::loadPopulation()
 {
 	return 0; // to be implemented when we have sample files

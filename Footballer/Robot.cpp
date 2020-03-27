@@ -1,5 +1,10 @@
 #include "Robot.h"
 
+Robot::~Robot()
+{
+	if (m_start) delete m_start;
+}
+
 void Robot::birth()
 {
 	m_start = new Tree();

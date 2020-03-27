@@ -1,5 +1,12 @@
 #include "Tree.h"
 
+Tree::~Tree()
+{
+	if (m_left) delete m_left;
+	if (m_center) delete m_center;
+	if (m_right) delete m_right;
+}
+
 //****************************************************
 //* RECEBE O PONTEIRO, CHAMA A FUNCAO READ, MONTA O INDIVIDUO E RETORNA O PONTEIRO DESSE INDIVIDUO
 //****************************************************

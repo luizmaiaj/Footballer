@@ -5,6 +5,7 @@
 class Robot
 {
 public:
+	~Robot();
 	void birth();
 
 private:

@@ -9,6 +9,7 @@ class Mayor
 {
 public:
 	Mayor();
+	~Mayor();
 	uint loadPopulation(); // reads the population from files
 	uint createPopulation(uint aPopulation);
 	uint testPopulation(City& aCity, uint aPopulation, uint aGenerations, uint aCrossing);

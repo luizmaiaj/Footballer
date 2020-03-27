@@ -6,6 +6,7 @@ using namespace std;
 class Tree
 {
 public:
+	~Tree();
 	bool load(string aFilename);
 	void create(Tree* pTree, uint aID);
 	void setRoot(bool aRoot);
