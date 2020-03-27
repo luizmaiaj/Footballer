@@ -5,6 +5,12 @@
 #include <sstream>
 #include <iostream>
 
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+
+using namespace sf;
+using namespace std;
+
 typedef unsigned int uint;
 typedef unsigned char uchar;
 

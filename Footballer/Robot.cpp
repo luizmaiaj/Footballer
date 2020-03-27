@@ -11,8 +11,12 @@ void Robot::birth()
 
 	m_start->setRoot(true);
 	m_start->create(m_start, 1);				// creates the random tree
+}
 
-	m_dir = ANGLE * (rand() % (360 / ANGLE));	// sets the initial angle
-	m_col = (rand() % 198) + 1;					// sets the initial column or x coordinate
-	m_lin = (rand() % 198) + 1;					// sets the initial line or y coordinate
+void Robot::reset(uint aPosX, uint aPosY, uint aAngle)
+{
+	m_fitness = 0;
+	m_posX = aPosX;
+	m_posY = aPosY;
+	m_angle = aAngle;
 }

@@ -1,17 +1,15 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
 #include "consts.h"
 
 constexpr uint BLOCKS = 9;
-
-using namespace sf;
 
 class City
 {
 public:
 	City(uint aWidth, uint aHeight);
 	void draw();
+	bool collidesEnvironment(uint PosX, uint PosY);
 
 	RenderWindow* m_pWindow{ nullptr };
 

@@ -41,10 +41,10 @@ void City::initialiseEnvironment()
 //*******************************************
 //* DESENHA OBSTACULO NA MATRIZ DO AMBIENTE *
 //*******************************************
-void City::drawbox(uint lin, uint col, uint size)
+void City::drawbox(uint PosX, uint PosY, uint size)
 {
-	for (uint i = lin; i < (lin + size); i++)
-		for (uint j = col; j < (col + size); j++)
+	for (uint i = PosX; i < (PosX + size); i++)
+		for (uint j = PosY; j < (PosY + size); j++)
 			m_matriz[i][j] = 1;
 }
 
@@ -57,6 +57,11 @@ void City::draw()
 		m_pWindow->draw(*m_pSpriteBlock[i]);
 
 	m_pWindow->display(); // Show everything we just drew
+}
+
+bool City::collidesEnvironment(uint PosX, uint PosY)
+{
+	return (m_matriz[PosX][PosY] == 1);
 }
 
 void City::initialiseSprites(uint aWidth, uint aHeight)

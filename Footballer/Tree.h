@@ -1,8 +1,6 @@
 #pragma once
 #include "consts.h"
 
-using namespace std;
-
 class Tree
 {
 public:

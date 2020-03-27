@@ -21,7 +21,9 @@ uint Mayor::loadPopulation()
 
 uint Mayor::createPopulation(uint aPopulation)
 {
-	for (uint i = 0; i < aPopulation; i++)
+	if (m_robots.size() >= aPopulation) return aPopulation;
+
+	for (uint i = m_robots.size(); i < aPopulation; i++)
 	{
 		Robot* pR = new Robot(); // new robot
 
@@ -33,15 +35,36 @@ uint Mayor::createPopulation(uint aPopulation)
 	return aPopulation;
 }
 
-uint Mayor::testPopulation(City& aCity, uint aPopulation, uint aGenerations, uint aCrossing)
+void Mayor::resetPopulation(unique_ptr<City>& pCity)
 {
-	for (uint iPop = 0; iPop < aPopulation; iPop++)
+	for (itRobot it = m_robots.begin(); it != m_robots.end(); it++)
 	{
-		for (uint iGen = 0; iGen < aGenerations; iGen++)
-		{
+		Robot* pR = *it;
+		uint PosX{ 0 }, PosY{ 0 };
 
-		}
+		randomPosition(pCity, 1, HEIGHT - 1, PosX, PosY);
+
+		pR->reset(PosX, PosY, ANGLE * (rand() % (360 / ANGLE)));
 	}
+}
 
-	return uint();
+void Mayor::randomPosition(unique_ptr<City>& pCity, uint aMin, uint aMax, uint& PosX, uint& PosY)
+{
+	do
+	{
+		aMax -= aMin;
+
+		PosX = (rand() % aMax) + aMin;
+
+		PosY = (rand() % aMax) + aMin;
+	}
+	while (pCity->collidesEnvironment(PosX, PosY));
+}
+
+uint Mayor::createPopulation(unique_ptr<City>& pCity, uint aPopulation, uint aCrossing)
+{
+	aPopulation = createPopulation(aPopulation);	// creates or completes a population with new individuals
+	resetPopulation(pCity);			// resets position, angle and fitness
+
+	return aPopulation;
 }
