@@ -8,10 +8,10 @@ typedef list<Robot*>::iterator itRobot;
 class Mayor
 {
 public:
-	Mayor(uint aPopulation);
+	Mayor();
 	uint loadPopulation(); // reads the population from files
-	uint createPopulation();
-	uint testPopulation(uint aPopulation, uint aGenerations, uint aCrossing);
+	uint createPopulation(uint aPopulation);
+	uint testPopulation(City& aCity, uint aPopulation, uint aGenerations, uint aCrossing);
 
 private:
 	listRobot m_robots;

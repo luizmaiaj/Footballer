@@ -1,12 +1,7 @@
 #include "Mayor.h"
 
-Mayor::Mayor(uint aPopulation)
+Mayor::Mayor()
 {
-	for (uint i = 0; i < aPopulation; i++)
-	{
-		Robot* pZ = new Robot(); // zombie sound
-		m_robots.push_back(pZ);
-	}
 }
 
 uint Mayor::loadPopulation()
@@ -14,23 +9,21 @@ uint Mayor::loadPopulation()
 	return 0; // to be implemented when we have sample files
 }
 
-uint Mayor::createPopulation()
+uint Mayor::createPopulation(uint aPopulation)
 {
-	uint i{ 0 };
-
-	for (itRobot it = m_robots.begin(); it != m_robots.end(); it++)
+	for (uint i = 0; i < aPopulation; i++)
 	{
-		Robot* pRobot = *it;
+		Robot* pR = new Robot(); // new robot
 
-		pRobot->birth();
-		i++;
-		//printf("\n");
+		pR->birth(); // allocate the random tree
+
+		m_robots.push_back(pR); // store
 	}
 
-	return i;
+	return aPopulation;
 }
 
-uint Mayor::testPopulation(uint aPopulation, uint aGenerations, uint aCrossing)
+uint Mayor::testPopulation(City& aCity, uint aPopulation, uint aGenerations, uint aCrossing)
 {
 	for (uint iPop = 0; iPop < aPopulation; iPop++)
 	{

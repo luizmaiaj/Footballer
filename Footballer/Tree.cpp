@@ -38,7 +38,7 @@ void Tree::create(Tree* pTree, uint aID)
 	switch (randnum)
 	{
 	case 1:
-		m_info = 51;  //GUARDA `3` EM INFO REFERENTE A `PROGN3`
+		m_info = LEAF::PROGN3; //51;  //GUARDA `3` EM INFO REFERENTE A `PROGN3`
 		m_left = new Tree();
 		m_left->create(this, ++m_id);
 		m_center = new Tree();
@@ -47,33 +47,33 @@ void Tree::create(Tree* pTree, uint aID)
 		m_right->create(this, ++m_id);
 		break;
 	case 2:
-		m_info = 50;  //GUARDA `2` EM INFO REFERENTE A `PROGN2`
+		m_info = LEAF::PROGN2; // 50;  //GUARDA `2` EM INFO REFERENTE A `PROGN2`
 		m_left = new Tree();
 		m_left->create(this, ++m_id);
 		m_right = new Tree();
 		m_right->create(this, ++m_id);
 		break;
 	case 3:
-		m_info = 73;  //GUARDA `I` EM INFO REFERENTE A `IFWALL`
+		m_info = LEAF::IFWALL; // 73;  //GUARDA `I` EM INFO REFERENTE A `IFWALL`
 		m_left = new Tree();
 		m_left->create(this, ++m_id);
 		m_right = new Tree();
 		m_right->create(this, ++m_id);
 		break;
 	case 4:
-		m_info = 65;  //GUARDA `A` EM INFO REFERENTE A `ALIGN`
+		m_info = LEAF::ALIGN; // 65;  //GUARDA `A` EM INFO REFERENTE A `ALIGN`
 		break;
 	case 5:
-		m_info = 70;  //GUARDA `F` EM INFO REFERENTE A `WALKFRONT`
+		m_info = LEAF::FRONT; // 70;  //GUARDA `F` EM INFO REFERENTE A `WALKFRONT`
 		break;
 	case 6:
-		m_info = 66;  //GUARDA `B` EM INFO REFERENTE A `WALKBACK`
+		m_info = LEAF::BACK; // 66;  //GUARDA `B` EM INFO REFERENTE A `WALKBACK`
 		break;
 	case 7:
-		m_info = 76;  //GUARDA `L` EM INFO REFERENTE A `LEFT`
+		m_info = LEAF::LEFT; // 76;  //GUARDA `L` EM INFO REFERENTE A `LEFT`
 		break;
 	case 8:
-		m_info = 82;  //GUARDA `R` EM INFO REFERENTE A `RIGHT`
+		m_info = LEAF::RIGHT; // 82;  //GUARDA `R` EM INFO REFERENTE A `RIGHT`
 		break;
 	}
 }

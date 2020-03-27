@@ -6,6 +6,7 @@
 #include <iostream>
 
 typedef unsigned int uint;
+typedef unsigned char uchar;
 
 constexpr unsigned int GENERATIONS = 50;							//NUMERO DE GERACOES;
 constexpr unsigned int POPULATION = 10;							//TAMANHO DA POPULACAO;
@@ -20,3 +21,5 @@ constexpr unsigned int ANGLE = 5;									//ANGULO QUE O ROBO SE VIRA;
 constexpr unsigned int HITDISTANCE = 1;								//DISTANCIA CONSIDERADA PARA TOQUE;
 
 constexpr double PI = 3.14159265358979323846; //PI;
+
+enum class LEAF {PROGN3, PROGN2, IFWALL, ALIGN, FRONT, BACK, LEFT, RIGHT};

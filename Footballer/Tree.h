@@ -14,7 +14,7 @@ public:
 private:
 	Tree* load(Tree* pointer);
 
-	char m_info{ '0' }; // character with the action or function to perform
+	LEAF m_info{ LEAF::PROGN3 }; // character with the action or function to perform
 
 	Tree* m_top{ nullptr };
 	Tree* m_left{ nullptr };
