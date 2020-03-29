@@ -12,17 +12,6 @@ Tree::~Tree()
 //****************************************************
 bool Tree::load(string aFilename)
 {
-	ifstream inputFile(aFilename);
-	if (inputFile.is_open())
-	{
-		inputFile >> m_ssFile;
-		inputFile.close();
-
-		load(this);
-
-		return true;
-	}
-
 	return false;
 }
 
@@ -93,6 +82,44 @@ void Tree::setRoot(bool aRoot)
 bool Tree::getRoot()
 {
 	return m_root;
+}
+
+LEAF Tree::getInfo()
+{
+	return m_info;
+}
+
+Tree* Tree::getNext()
+{
+	if (!m_bRun) return this;
+
+	if (m_left)
+		if (!m_left->wasRun()) return m_left->getNext();
+	if (m_center)
+		if (!m_center->wasRun()) return m_center->getNext();
+	if (m_right)
+		if (!m_right->wasRun()) return m_right->getNext();
+
+	return m_top;
+}
+
+void Tree::run()
+{
+	m_bRun = true;
+}
+
+bool Tree::wasRun()
+{
+	return m_bRun;
+}
+
+void Tree::reset()
+{
+	if (m_left) m_left->reset();
+	if (m_center) m_center->reset();
+	if (m_right) m_right->reset();
+
+	m_bRun = false;
 }
 
 Tree* Tree::load(Tree* pointer)

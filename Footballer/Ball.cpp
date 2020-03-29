@@ -13,7 +13,7 @@ Ball::~Ball()
 	if (m_pTexture) delete m_pTexture;
 }
 
-void Ball::reset(uint aPosX, uint aPosY, uint aAngle)
+void Ball::reset(float aPosX, float aPosY, float aAngle)
 {
 	m_posX = aPosX;
 	m_posY = aPosY;

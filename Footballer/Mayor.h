@@ -13,7 +13,9 @@ public:
 	~Mayor();
 	uint loadPopulation(); // reads the population from files
 	uint createPopulation(unique_ptr<City>& pCity, uint aPopulation, uint aCrossing);
-	void randomPosition(unique_ptr<City>& pCity, uint aMin, uint aMax, uint& PosX, uint& PosY);
+	void randomPosition(unique_ptr<City>& pCity, float aMin, float aMax, float& PosX, float& PosY);
+	void update(unique_ptr<City>& pCity, float aDelta);
+	void drawRobots(RenderWindow* pWindow);
 
 private:
 	uint createPopulation(uint aPopulation);

@@ -9,6 +9,11 @@ public:
 	void create(Tree* pTree, uint aID);
 	void setRoot(bool aRoot);
 	bool getRoot();
+	LEAF getInfo();
+	Tree* getNext();
+	void run();
+	bool wasRun();
+	void reset();
 
 private:
 	Tree* load(Tree* pointer);
@@ -24,6 +29,6 @@ private:
 
 	uint m_id{ 0 }; // the sequential number of the branch or leaf when it was created
 
-	string m_ssFile;
+	bool m_bRun{ false };
 };
 

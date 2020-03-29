@@ -7,16 +7,13 @@ constexpr uint BLOCKS = 9;
 class City
 {
 public:
-	City(uint aWidth, uint aHeight);
-	void draw();
-	bool collidesEnvironment(uint PosX, uint PosY);
-
-	RenderWindow* m_pWindow{ nullptr };
+	City();
+	bool collidesEnvironment(float PosX, float PosY);
+	Sprite* getBG();
+	void getBlocks(Sprite* pSpriteBlock[BLOCKS]);
 
 private:
-	void initialiseSprites(uint aWidth, uint aHeight);
-	void initialiseMessages();
-	void initialiseTime();
+	void initialiseSprites();
 	void initialiseEnvironment();
 	void drawbox(uint lin, uint col, uint size);
 	
