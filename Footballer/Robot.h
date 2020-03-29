@@ -1,27 +1,31 @@
 #pragma once
 #include "Tree.h"
-#include "City.h"
 
 class Robot:
 	public Sprite
 {
 public:
-	Robot(string aFilename);
+	Robot();
+	Robot(Robot* pParent);
 	~Robot();
 	void birth();
 	void reset(float aPosX, float aPosY, float aAngle);
-	bool update(unique_ptr<City>& pCity, float aDelta);
+	bool update(float aDelta);
+	void cross(Robot* aMother, Robot** aSon, Robot** aDaughter);
+	float getFitness() { return m_fitness; };
+	unsigned long getSize() { return m_size; };
+	Tree* getRoot() { return m_start; };
 
 private:
-	void move(unique_ptr<City>& pCity, LEAF aLeaf);
+	void move(LEAF aLeaf);
 	void resetTree();
 
-	long m_fitness{ 0 };
+	float m_fitness{ 0 };
 	Tree* m_start{ nullptr };
 	Tree* m_cursor{ nullptr };
 	float m_angle{ 0 };
-	float m_posY{ 0 };
-	float m_posX{ 0 };
+	unsigned long m_moves{ 0 };
+	unsigned long m_size{ 0 };
 
 	Texture* m_texture{ nullptr };
 };

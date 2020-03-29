@@ -3,50 +3,6 @@
 City::City()
 {
 	initialiseSprites();
-	
-	initialiseEnvironment();
-}
-
-//*******************************
-//* RECEBE MATRIZ E A PREENCHE CONFORME O AMBIENTE INICIAL
-//*******************************
-void City::initialiseEnvironment()
-{
-	for (uint lin = 0; lin < HEIGHT; lin++)
-	{
-		for (uint col = 0; col < WIDTH; col++)
-		{
-			if (lin == 0 || lin == (HEIGHT - 1) || col == 0 || col == (WIDTH - 1))
-				m_matriz[lin][col] = 1;
-			else
-				m_matriz[lin][col] = 0;
-		}
-	}
-
-	drawbox(25, 25, 16);
-	drawbox(25, 91, 16);
-	drawbox(25, 160, 16);
-	drawbox(91, 25, 16);
-	drawbox(91, 91, 16);
-	drawbox(91, 160, 16);
-	drawbox(160, 25, 16);
-	drawbox(160, 91, 16);
-	drawbox(160, 160, 16);
-}
-
-//*******************************************
-//* DESENHA OBSTACULO NA MATRIZ DO AMBIENTE *
-//*******************************************
-void City::drawbox(uint PosX, uint PosY, uint size)
-{
-	for (uint i = PosX; i < (PosX + size); i++)
-		for (uint j = PosY; j < (PosY + size); j++)
-			m_matriz[i][j] = 1;
-}
-
-bool City::collidesEnvironment(float PosX, float PosY)
-{
-	return (m_matriz[(uint) PosX][(uint) PosY] == 1);
 }
 
 Sprite* City::getBG()

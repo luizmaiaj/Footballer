@@ -6,7 +6,9 @@ class Tree
 public:
 	~Tree();
 	bool load(string aFilename);
-	void create(Tree* pTree, uint aID);
+	void create(Tree* pTree, unsigned long& aSize, Tree* pParent);
+	Tree* getPoint(unsigned long aPoint);
+	Tree* setPoint(Tree* pPoint, unsigned long aPoint);
 	void setRoot(bool aRoot);
 	bool getRoot();
 	LEAF getInfo();
@@ -14,6 +16,7 @@ public:
 	void run();
 	bool wasRun();
 	void reset();
+	LEAF randomLeaf();
 
 private:
 	Tree* load(Tree* pointer);
@@ -27,7 +30,7 @@ private:
 
 	bool m_root{ false }; // determines if this is the root of the tree
 
-	uint m_id{ 0 }; // the sequential number of the branch or leaf when it was created
+	unsigned long m_id{ 0 }; // the sequential number of the branch or leaf when it was created
 
 	bool m_bRun{ false };
 };

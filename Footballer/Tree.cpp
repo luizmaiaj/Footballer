@@ -7,71 +7,115 @@ Tree::~Tree()
 	if (m_right) delete m_right;
 }
 
-//****************************************************
-//* RECEBE O PONTEIRO, CHAMA A FUNCAO READ, MONTA O INDIVIDUO E RETORNA O PONTEIRO DESSE INDIVIDUO
-//****************************************************
+/*
+/ RECEBE O PONTEIRO, CHAMA A FUNCAO READ, MONTA O INDIVIDUO E RETORNA O PONTEIRO DESSE INDIVIDUO
+*/
 bool Tree::load(string aFilename)
 {
 	return false;
 }
 
-void Tree::create(Tree* pTree, uint aID)
+void Tree::create(Tree* pTree, unsigned long &aSize, Tree* pParent)
 {
-	uint randnum{ 0 };       //GUARDA NUMERO SORTEADO
-
-	m_id = aID;
+	m_id = ++aSize;
 	m_top = pTree;
 
-	if (m_root)						//NA PRIMEIRA EXECUCAO SORTEIA `PROGN3`
-		randnum = 1;
-	else if (m_id < LIMIT)			//RANDNUM RECEBE NUMERO DE 1 a 8
-		randnum = (rand() % 8) + 1;
-	else							//SE EXCEDER `LIMIT` SORTEIOS PASSA A SORTEAR SOMENTE TERMINAIS
-		randnum = (rand() % 4) + 5;  
+	m_info = (pParent) ? pParent->getInfo() : randomLeaf();
 
-	//printf("%i ", randnum);
+	//printf("%d:%d, ", m_id, m_info);
 
-	switch (randnum)
+	switch (m_info)
 	{
-	case 1:
-		m_info = LEAF::PROGN3; //51;  //GUARDA `3` EM INFO REFERENTE A `PROGN3`
+	case LEAF::PROGN3:
 		m_left = new Tree();
-		m_left->create(this, ++m_id);
+		m_left->create(this, aSize, (pParent) ? pParent->m_left : nullptr);
 		m_center = new Tree();
-		m_center->create(this, ++m_id);
+		m_center->create(this, aSize, (pParent) ? pParent->m_center : nullptr);
 		m_right = new Tree();
-		m_right->create(this, ++m_id);
+		m_right->create(this, aSize, (pParent) ? pParent->m_right : nullptr);
 		break;
-	case 2:
-		m_info = LEAF::PROGN2; // 50;  //GUARDA `2` EM INFO REFERENTE A `PROGN2`
+	case LEAF::PROGN2:
 		m_left = new Tree();
-		m_left->create(this, ++m_id);
+		m_left->create(this, aSize, (pParent) ? pParent->m_left : nullptr);
 		m_right = new Tree();
-		m_right->create(this, ++m_id);
+		m_right->create(this, aSize, (pParent) ? pParent->m_right : nullptr);
 		break;
-	case 3:
-		m_info = LEAF::IFWALL; // 73;  //GUARDA `I` EM INFO REFERENTE A `IFWALL`
+	case LEAF::IFWALL:
 		m_left = new Tree();
-		m_left->create(this, ++m_id);
+		m_left->create(this, aSize, (pParent) ? pParent->m_left : nullptr);
 		m_right = new Tree();
-		m_right->create(this, ++m_id);
+		m_right->create(this, aSize, (pParent) ? pParent->m_right : nullptr);
 		break;
-	case 4:
-		m_info = LEAF::ALIGN; // 65;  //GUARDA `A` EM INFO REFERENTE A `ALIGN`
-		break;
-	case 5:
-		m_info = LEAF::FRONT; // 70;  //GUARDA `F` EM INFO REFERENTE A `WALKFRONT`
-		break;
-	case 6:
-		m_info = LEAF::BACK; // 66;  //GUARDA `B` EM INFO REFERENTE A `WALKBACK`
-		break;
-	case 7:
-		m_info = LEAF::LEFT; // 76;  //GUARDA `L` EM INFO REFERENTE A `LEFT`
-		break;
-	case 8:
-		m_info = LEAF::RIGHT; // 82;  //GUARDA `R` EM INFO REFERENTE A `RIGHT`
+	default:
 		break;
 	}
+}
+
+LEAF Tree::randomLeaf()
+{
+	LEAF randLeaf{ LEAF::PROGN3 };
+
+	if (m_id == 1)						//NA PRIMEIRA EXECUCAO SORTEIA `PROGN3`
+		randLeaf = (LEAF) 0;
+	else if (m_id < LIMIT)			//RANDNUM RECEBE NUMERO DE 1 a 8
+		randLeaf = (LEAF) ((rand() % 8) + 1);
+	else							//SE EXCEDER `LIMIT` SORTEIOS PASSA A SORTEAR SOMENTE TERMINAIS
+		randLeaf = (LEAF) ((rand() % 4) + 5);
+
+	return randLeaf;
+}
+
+Tree* Tree::getPoint(unsigned long aPoint)
+{
+	if (m_id == aPoint)
+		return this;
+
+	Tree* pTemp{ nullptr };
+
+	if (m_left)
+		if (pTemp = m_left->getPoint(aPoint))
+			return pTemp;
+	
+	if (m_center)
+		if (pTemp = m_center->getPoint(aPoint))
+			return pTemp;
+
+	if (m_right)
+		if (pTemp = m_right->getPoint(aPoint))
+			return pTemp;
+
+	return nullptr;
+}
+
+Tree* Tree::setPoint(Tree* pPoint, unsigned long aPoint)
+{
+	if (m_id == aPoint)
+		return this;
+
+	Tree* pTemp{ nullptr };
+
+	if (m_left)
+		if (pTemp = m_left->getPoint(aPoint))
+		{
+			m_left = pTemp;
+			return nullptr;
+		}
+
+	if (m_center)
+		if (pTemp = m_center->getPoint(aPoint))
+		{
+			m_center = pTemp;
+			return nullptr;
+		}
+
+	if (m_right)
+		if (pTemp = m_right->getPoint(aPoint))
+		{
+			m_right = pTemp;
+			return nullptr;
+		}
+
+	return nullptr;
 }
 
 void Tree::setRoot(bool aRoot)

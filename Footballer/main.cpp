@@ -1,6 +1,7 @@
 // main.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 #include "Mayor.h"
+#include "City.h"
 
 using namespace std;
 
@@ -38,9 +39,9 @@ int main(void)
 				{
 					if (event.key.code == Keyboard::Return) // Restart while paused
 					{
-						pM->createPopulation(pC, POPULATION, CROSSING);
+						pM->createPopulation(POPULATION, CROSSING);
 
-						pM->randomPosition(pC, 1, HEIGHT - 1, PosX, PosY);
+						pM->randomPosition(1, HEIGHT - 1, PosX, PosY);
 						pB->reset(PosX, PosY, ANGLE * (rand() % M_360_ANGLE));
 
 						state = STATE::SIMULATING;
@@ -56,7 +57,9 @@ int main(void)
 		if (state == STATE::SIMULATING)
 		{
 			float delta = dt.asSeconds();
-			pM->update(pC, delta);
+
+			if (!pM->update(delta))
+				state = STATE::CROSSING; // if all individuals have been executed till the limit MOVES
 
 			pWindow->clear(); // Clear everything from the last frame
 			pWindow->draw(*pC->getBG()); // background
@@ -66,10 +69,15 @@ int main(void)
 			for (uint i = 0; i < BLOCKS; i++)
 				pWindow->draw(*pSpriteBlock[i]);
 
-			pM->drawRobots(pWindow);
+			pM->draw(pWindow);
 
 			pWindow->display(); // Show everything we just drew
-		}		
+		}
+		else if (state == STATE::CROSSING)
+		{
+			pM->crossPopulation();
+			state = STATE::SIMULATING;
+		}
 	}
 
 	return(0);

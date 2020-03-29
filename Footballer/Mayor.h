@@ -12,15 +12,22 @@ public:
 	Mayor();
 	~Mayor();
 	uint loadPopulation(); // reads the population from files
-	uint createPopulation(unique_ptr<City>& pCity, uint aPopulation, uint aCrossing);
-	void randomPosition(unique_ptr<City>& pCity, float aMin, float aMax, float& PosX, float& PosY);
-	void update(unique_ptr<City>& pCity, float aDelta);
-	void drawRobots(RenderWindow* pWindow);
+	uint createPopulation(uint aPopulation, uint aCrossing);
+	uint crossPopulation();
+	void randomPosition(float aMin, float aMax, float& PosX, float& PosY);
+	bool update(float aDelta);
+	void draw(RenderWindow* pWindow);
+
+	bool collidesEnvironment(float PosX, float PosY);
 
 private:
 	uint createPopulation(uint aPopulation);
-	void resetPopulation(unique_ptr<City>& pCity);
+	void resetPopulation();
+
+	void initialiseEnvironment();
+	void drawbox(uint lin, uint col, uint size);
 
 	listRobot m_robots;
+	uchar m_matriz[HEIGHT][WIDTH];
 };
 

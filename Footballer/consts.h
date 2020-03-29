@@ -20,8 +20,8 @@ constexpr uint CROSSING = (uint)(POPULATION * 0.7f); //70% DA POPULACAO;
 constexpr uint REPRODUCTION = POPULATION - CROSSING;        //30% DA POPULACAO;
 constexpr uint HEIGHT = 200;								//ALTURA DA MATRIZ;
 constexpr uint WIDTH = 200;									//LARGURA DA MATRIZ;
-constexpr uint RUNS = 1;									//NUMERO DE TESTES DE CADA INDIVIDUOS;
-constexpr uint EXECUTE = 2000;								//NUMERO DE EXECUCOES DA ARVORE POR TESTE;
+constexpr uint RUNS = 1;									//Number of times that each individual is executed
+constexpr uint MOVES = 2000;								//Number of times that the execution will move through the tree
 constexpr uint LIMIT = 1000;								//LIMITA COMPRIMENTO DO INDIVIDUO;
 constexpr float ANGLE = 5.f;										//ANGULO QUE O ROBO SE VIRA;
 constexpr uint M_360_ANGLE = (uint) (360 / ANGLE);			//ANGULO QUE O ROBO SE VIRA;
@@ -31,4 +31,4 @@ constexpr double PI = 3.14159265358979323846; //PI;
 constexpr double PI_180 = PI / 180;
 
 enum class LEAF {PROGN3, PROGN2, IFWALL, ALIGN, FRONT, BACK, LEFT, RIGHT};
-enum class STATE {WAITING, SIMULATING};
+enum class STATE {WAITING, SIMULATING, CROSSING};
