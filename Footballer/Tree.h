@@ -12,10 +12,10 @@ public:
 	void setRoot(bool aRoot);
 	bool getRoot();
 	LEAF getInfo();
-	Tree* getNext();
+	Tree* getNext(LEAF aDirection);
 	void run();
 	bool wasRun();
-	void reset();
+	void reset(bool bResetTo);
 	LEAF randomLeaf();
 
 private:

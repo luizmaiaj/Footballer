@@ -7,9 +7,7 @@ Tree::~Tree()
 	if (m_right) delete m_right;
 }
 
-/*
-/ RECEBE O PONTEIRO, CHAMA A FUNCAO READ, MONTA O INDIVIDUO E RETORNA O PONTEIRO DESSE INDIVIDUO
-*/
+// RECEBE O PONTEIRO, CHAMA A FUNCAO READ, MONTA O INDIVIDUO E RETORNA O PONTEIRO DESSE INDIVIDUO
 bool Tree::load(string aFilename)
 {
 	return false;
@@ -53,6 +51,8 @@ void Tree::create(Tree* pTree, unsigned long &aSize, Tree* pParent)
 
 LEAF Tree::randomLeaf()
 {
+	//srand((unsigned int)time(0));
+
 	LEAF randLeaf{ LEAF::PROGN3 };
 
 	if (m_id == 1)						//NA PRIMEIRA EXECUCAO SORTEIA `PROGN3`
@@ -133,16 +133,26 @@ LEAF Tree::getInfo()
 	return m_info;
 }
 
-Tree* Tree::getNext()
+Tree* Tree::getNext(LEAF aDirection)
 {
-	if (!m_bRun) return this;
+	if (!m_bRun)
+		return this;
+
+	if (aDirection == LEAF::RIGHT)
+		m_left->reset(true);
+	else if (aDirection == LEAF::LEFT)
+		m_right->reset(true);
+
 
 	if (m_left)
-		if (!m_left->wasRun()) return m_left->getNext();
+		if (!m_left->wasRun())
+			return m_left->getNext(aDirection);
 	if (m_center)
-		if (!m_center->wasRun()) return m_center->getNext();
+		if (!m_center->wasRun())
+			return m_center->getNext(aDirection);
 	if (m_right)
-		if (!m_right->wasRun()) return m_right->getNext();
+		if (!m_right->wasRun())
+			return m_right->getNext(aDirection);
 
 	return m_top;
 }
@@ -157,13 +167,13 @@ bool Tree::wasRun()
 	return m_bRun;
 }
 
-void Tree::reset()
+void Tree::reset(bool bResetTo)
 {
-	if (m_left) m_left->reset();
-	if (m_center) m_center->reset();
-	if (m_right) m_right->reset();
+	if (m_left) m_left->reset(bResetTo);
+	if (m_center) m_center->reset(bResetTo);
+	if (m_right) m_right->reset(bResetTo);
 
-	m_bRun = false;
+	m_bRun = bResetTo;
 }
 
 Tree* Tree::load(Tree* pointer)

@@ -7,7 +7,7 @@ using namespace std;
 
 int main(void)
 {
-	RenderWindow* pWindow{ nullptr };
+	RenderWindow* pWindow = new RenderWindow(VideoMode(WIDTH, HEIGHT), "Footballer", Style::Default); // window
 	unique_ptr<Mayor> pM(new Mayor());
 	unique_ptr<City> pC(new City());
 	unique_ptr<Ball> pB(new Ball("img/mini_ball.png"));
@@ -18,9 +18,9 @@ int main(void)
 	STATE state{ STATE::WAITING };
 	Clock clock; // Here is our clock for timing everything
 	Time totalTime{ Time::Zero }; // How long has the PLAYING state been active
-	pWindow = new RenderWindow(VideoMode(WIDTH, HEIGHT), "Footballer", Style::Default); // window
 
-	uint currentRobot{ 0 };
+	Sprite* pSpriteBlock[BLOCKS];
+	pC->getBlocks(pSpriteBlock);
 
 	while (pWindow->isOpen())
 	{
@@ -40,9 +40,6 @@ int main(void)
 					if (event.key.code == Keyboard::Return) // Restart while paused
 					{
 						pM->createPopulation(POPULATION, CROSSING);
-
-						pM->randomPosition(1, HEIGHT - 1, PosX, PosY);
-						pB->reset(PosX, PosY, ANGLE * (rand() % M_360_ANGLE));
 
 						state = STATE::SIMULATING;
 						clock.restart(); // Reset the clock so there isn't a frame jump
@@ -64,8 +61,6 @@ int main(void)
 			pWindow->clear(); // Clear everything from the last frame
 			pWindow->draw(*pC->getBG()); // background
 
-			Sprite* pSpriteBlock[BLOCKS];
-			pC->getBlocks(pSpriteBlock);
 			for (uint i = 0; i < BLOCKS; i++)
 				pWindow->draw(*pSpriteBlock[i]);
 

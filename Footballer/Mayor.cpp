@@ -2,7 +2,7 @@
 
 Mayor::Mayor()
 {
-	initialiseEnvironment();
+
 }
 
 Mayor::~Mayor()
@@ -52,25 +52,8 @@ void Mayor::resetPopulation()
 	for (itRobot it = m_robots.begin(); it != m_robots.end(); it++)
 	{
 		Robot* pR = *it;
-		float PosX{ 0 }, PosY{ 0 };
-
-		randomPosition(1, HEIGHT - 1, PosX, PosY);
-
-		pR->reset(PosX, PosY, ANGLE * (rand() % M_360_ANGLE));
+		pR->reset();
 	}
-}
-
-void Mayor::randomPosition(float aMin, float aMax, float& PosX, float& PosY)
-{
-	do
-	{
-		aMax -= aMin;
-
-		PosX = (rand() % uint(aMax)) + aMin;
-
-		PosY = (rand() % uint(aMax)) + aMin;
-	}
-	while (collidesEnvironment(PosX, PosY));
 }
 
 bool Mayor::update(float aDelta)
@@ -81,17 +64,8 @@ bool Mayor::update(float aDelta)
 	{
 		Robot* pR = *it;
 
-		float posX{ pR->getPosition().x };
-		float posY{ pR->getPosition().y };
-
-		if (pR->update(aDelta))
+		if (pR->execute(aDelta))
 			bEnd = true;
-
-		float nposX{ pR->getPosition().x };
-		float nposY{ pR->getPosition().y };
-
-		if (collidesEnvironment(nposX, nposY))
-			pR->setPosition(posX, posY);
 	}
 
 	return bEnd;
@@ -129,6 +103,8 @@ uint Mayor::crossPopulation()
 
 		if (lTemp > lMax) lMax = lTemp;
 	}
+
+	printf("Max fit: %.3f\n", lMax);
 
 	// remove 70% less performing
 	lMax *= 0.7f;
@@ -178,46 +154,4 @@ uint Mayor::crossPopulation()
 	resetPopulation();
 
 	return POPULATION;
-}
-
-//*******************************
-//* RECEBE MATRIZ E A PREENCHE CONFORME O AMBIENTE INICIAL
-//*******************************
-void Mayor::initialiseEnvironment()
-{
-	for (uint lin = 0; lin < HEIGHT; lin++)
-	{
-		for (uint col = 0; col < WIDTH; col++)
-		{
-			if (lin == 0 || lin == (HEIGHT - 1) || col == 0 || col == (WIDTH - 1))
-				m_matriz[lin][col] = 1;
-			else
-				m_matriz[lin][col] = 0;
-		}
-	}
-
-	drawbox(25, 25, 16);
-	drawbox(25, 91, 16);
-	drawbox(25, 160, 16);
-	drawbox(91, 25, 16);
-	drawbox(91, 91, 16);
-	drawbox(91, 160, 16);
-	drawbox(160, 25, 16);
-	drawbox(160, 91, 16);
-	drawbox(160, 160, 16);
-}
-
-//*******************************************
-//* DESENHA OBSTACULO NA MATRIZ DO AMBIENTE *
-//*******************************************
-void Mayor::drawbox(uint PosX, uint PosY, uint size)
-{
-	for (uint i = PosX; i < (PosX + size); i++)
-		for (uint j = PosY; j < (PosY + size); j++)
-			m_matriz[i][j] = 1;
-}
-
-bool Mayor::collidesEnvironment(float PosX, float PosY)
-{
-	return (m_matriz[(uint)PosX][(uint)PosY] == 1);
 }
