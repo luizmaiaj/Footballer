@@ -1,20 +1,26 @@
 #pragma once
 
 #include "consts.h"
+#include "Environment.h"
 
 class Ball :
 	public Sprite
 {
 public:
-	Ball(string aFile);
+	Ball(Environment* pEnv);
 	~Ball();
-	void reset(float aPosX, float aPosY, float aAngle);
+	void move();
+	void hit(float aAngle) { m_angle = aAngle; m_moves = 40; };
+	void reset(float aPosX, float aPosY);
 
 private:
+	float m_startY{ 0 };
+	float m_startX{ 0 };
 	float m_angle{ 0 };
-	float m_posY{ 0 };
-	float m_posX{ 0 };
+
+	unsigned long m_moves{ 0 };
 
 	Texture* m_pTexture{ nullptr };
+	Environment* m_pEnv{ nullptr };
 };
 

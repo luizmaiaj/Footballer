@@ -1,21 +1,21 @@
 #include "Robot.h"
 
-Robot::Robot()
+Robot::Robot(Environment* pEnv)
 {
-	initialiseEnvironment();
+	m_pEnv = pEnv;
 
-	m_texture = new Texture();
-	m_texture->loadFromFile("img/mini_robot.png");
-	setTexture(*m_texture);
+	initTexture();
+
+	initBall();
 }
 
-Robot::Robot(Robot* pParent)
+Robot::Robot(Robot* pParent, Environment* pEnv)
 {
-	initialiseEnvironment();
+	m_pEnv = pEnv;
 
-	m_texture = new Texture();
-	m_texture->loadFromFile("img/mini_robot.png");
-	setTexture(*m_texture);
+	initTexture();
+
+	initBall();
 
 	m_start = new Tree();
 
@@ -27,6 +27,7 @@ Robot::~Robot()
 {
 	if (m_start) delete m_start;
 	if (m_texture) delete m_texture;
+	if (m_pBall) delete m_pBall;
 }
 
 void Robot::birth()
@@ -39,33 +40,20 @@ void Robot::birth()
 
 void Robot::reset()
 {
-	//srand((unsigned int)time(0));
-
-	float PosX{ 0 }, PosY{ 0 };
-	float aMin = 1;
-	float aMax = HEIGHT - (1 + aMin);
-
-	do
-	{
-		PosX = (rand() % uint(aMax)) + aMin;
-
-		PosY = (rand() % uint(aMax)) + aMin;
-	} while (collidesEnvironment(PosX, PosY));
-
-	m_startX = PosX;
-	m_startY = PosY;
+	m_pEnv->genCoord(m_startX, m_startY, m_angle);
+	setPosition(m_startX, m_startY);
+	resetTree();
+	resetBall();
 
 	m_fitness = 0;
 	m_moves = 0;
-	m_angle = ANGLE * (rand() % M_360_ANGLE);
 	m_cursor = m_start;
-
-	setPosition(PosX, PosY);
-	resetTree();
 }
 
 bool Robot::execute(float aDelta)
 {
+	m_pBall->move();
+
 	if (m_moves >= MOVES)
 	{
 		m_fitness += abs(m_startX - getPosition().x) + abs(m_startY - getPosition().y);
@@ -88,6 +76,7 @@ bool Robot::execute(float aDelta)
 			direction = LEAF::RIGHT;
 		break;
 	case LEAF::ALIGN:
+		align();
 		break;
 	case LEAF::FRONT:
 		move(LEAF::FRONT);
@@ -115,10 +104,8 @@ bool Robot::execute(float aDelta)
 
 void Robot::cross(Robot* aMother, Robot** aSon, Robot** aDaughter)
 {
-	//srand((unsigned int)time(0));
-
-	*aSon = new Robot(this);
-	*aDaughter = new Robot(aMother);
+	*aSon = new Robot(this, m_pEnv);
+	*aDaughter = new Robot(aMother, m_pEnv);
 
 	unsigned long lSon{ (rand() % ((*aSon)->getSize() - 1)) + 2 };
 	unsigned long lDaughter{ (rand() % ((*aDaughter)->getSize() - 1)) + 2 };
@@ -134,27 +121,66 @@ void Robot::move(LEAF aLeaf)
 {
 	float angle = (aLeaf == LEAF::BACK) ? m_angle + 180 : m_angle;
 
-	float posX = getPosition().x + (float)cos(angle * PI_180);
-	float posY = getPosition().y - (float)sin(angle * PI_180);
+	float posX = getPosition().x + (float)cos(angle * C_PI_180);
+	float posY = getPosition().y - (float)sin(angle * C_PI_180);
 
-	if (collidesEnvironment(posX, posY))
+	if (m_pEnv->collision(posX, posY))
 		m_fitness -= 4;
 	else
 	{
 		m_fitness += (aLeaf == LEAF::BACK) ? .5f : 2.f;
 		setPosition(posX, posY);
 	}
+
+	hitBall();
 }
 
 bool Robot::ifwall()
 {
-	float posY = getPosition().y - (2 * (float)sin(PI * m_angle * PI_180));
-	float posX = getPosition().x + (2 * (float)cos(PI * m_angle * PI_180));
+	float posY = getPosition().y - (2 * (float)sin(C_PI * m_angle * C_PI_180));
+	float posX = getPosition().x + (2 * (float)cos(C_PI * m_angle * C_PI_180));
 
-	if (collidesEnvironment(posX, posY) || posY < 1 || posY > (HEIGHT - 2) || posX < 1 || posY > (WIDTH - 2))
+	if (m_pEnv->collision(posX, posY) || posY < 1 || posY > (HEIGHT - 2) || posX < 1 || posY > (WIDTH - 2))
 		return true;
 
 	return false;
+}
+
+void Robot::align()
+{
+	float dy = m_pBall->getPosition().y - getPosition().y;
+	float dx = m_pBall->getPosition().x - getPosition().x;
+	float angle = (float) C_180_PI * atan(dy / dx);
+
+	if (dx >= 0)
+		m_angle = 360 - angle;
+	else
+		m_angle = 180 - angle;
+}
+
+void Robot::hitBall()
+{
+	float dy = m_pBall->getPosition().y - getPosition().y;
+	float dx = m_pBall->getPosition().x - getPosition().x;
+
+	if (sqrt((dy * dy) + (dx * dx)) <= HITDISTANCE)
+	{
+		m_pBall->hit(m_angle);
+		m_fitness += 500;
+
+		// use random distance to move the ball and initial distance to robot to change fitness function
+		/*ballmoves = (rand() % 46) + 5;  //BALLMOVE RECEBE NUMERO DE 5 a 50;
+		if (!nbef)
+		{
+			unfit = n / Dini;
+			nbef = n;
+		}
+		else
+		{
+			unfit += (n - nbef) / Dini;
+			nbef = n;
+		}*/
+	}
 }
 
 void Robot::resetTree()
@@ -164,40 +190,25 @@ void Robot::resetTree()
 	m_cursor = m_start;
 }
 
-// RECEBE MATRIZ E A PREENCHE CONFORME O AMBIENTE INICIAL
-void Robot::initialiseEnvironment()
+void Robot::initTexture()
 {
-	for (uint lin = 0; lin < HEIGHT; lin++)
-	{
-		for (uint col = 0; col < WIDTH; col++)
-		{
-			if (lin == 0 || lin == (HEIGHT - 1) || col == 0 || col == (WIDTH - 1))
-				m_matriz[lin][col] = 1;
-			else
-				m_matriz[lin][col] = 0;
-		}
-	}
-
-	drawbox(25, 25, 16);
-	drawbox(25, 91, 16);
-	drawbox(25, 160, 16);
-	drawbox(91, 25, 16);
-	drawbox(91, 91, 16);
-	drawbox(91, 160, 16);
-	drawbox(160, 25, 16);
-	drawbox(160, 91, 16);
-	drawbox(160, 160, 16);
+	m_texture = new Texture();
+	m_texture->loadFromFile("img/mini_robot.png");
+	setTexture(*m_texture);
 }
 
-// DESENHA OBSTACULO NA MATRIZ DO AMBIENTE
-void Robot::drawbox(uint PosX, uint PosY, uint size)
+void Robot::initBall()
 {
-	for (uint i = PosX; i < (PosX + size); i++)
-		for (uint j = PosY; j < (PosY + size); j++)
-			m_matriz[i][j] = 1;
+	m_pBall = new Ball(m_pEnv);
+
+	resetBall();
 }
 
-bool Robot::collidesEnvironment(float PosX, float PosY)
+void Robot::resetBall()
 {
-	return (m_matriz[(uint)PosX][(uint)PosY] == 1);
+	float posX{ 0 }, posY{ 0 }, angle{ 0 };
+
+	m_pEnv->genCoord(posX, posY, angle);
+
+	m_pBall->reset(posX, posY);
 }

@@ -1,12 +1,13 @@
 #pragma once
 #include "Tree.h"
+#include "Ball.h"
 
 class Robot:
 	public Sprite
 {
 public:
-	Robot();
-	Robot(Robot* pParent);
+	Robot(Environment* pEnv);
+	Robot(Robot* pParent, Environment* pEnv);
 	~Robot();
 	void birth();
 	void reset();
@@ -15,15 +16,20 @@ public:
 	float getFitness() { return m_fitness; };
 	unsigned long getSize() { return m_size; };
 	Tree* getRoot() { return m_start; };
+	Sprite* getBall() { return m_pBall; };
 
 private:
-	bool collidesEnvironment(float PosX, float PosY);
-	void initialiseEnvironment();
-	void drawbox(uint lin, uint col, uint size);
+	void initTexture();
+	void initBall();
+	void resetBall();
 
 	void move(LEAF aLeaf);
 	bool ifwall();
+	void align();
+	void hitBall();
 	void resetTree();
+
+	Ball* m_pBall{ nullptr };
 
 	float m_fitness{ 0 };
 	float m_startX{ 0 };
@@ -35,6 +41,6 @@ private:
 	unsigned long m_size{ 0 };
 
 	Texture* m_texture{ nullptr };
-	uchar m_matriz[HEIGHT][WIDTH];
+	Environment* m_pEnv{ nullptr };
 };
 

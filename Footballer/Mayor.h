@@ -22,5 +22,6 @@ private:
 	void resetPopulation();
 
 	listRobot m_robots;
+	Environment* m_pEnv{ nullptr };
 };
 

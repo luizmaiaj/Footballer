@@ -51,8 +51,6 @@ void Tree::create(Tree* pTree, unsigned long &aSize, Tree* pParent)
 
 LEAF Tree::randomLeaf()
 {
-	//srand((unsigned int)time(0));
-
 	LEAF randLeaf{ LEAF::PROGN3 };
 
 	if (m_id == 1)						//NA PRIMEIRA EXECUCAO SORTEIA `PROGN3`

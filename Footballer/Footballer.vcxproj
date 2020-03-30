@@ -154,6 +154,7 @@
   <ItemGroup>
     <ClCompile Include="Ball.cpp" />
     <ClCompile Include="City.cpp" />
+    <ClCompile Include="Environment.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mayor.cpp" />
     <ClCompile Include="Robot.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="Ball.h" />
     <ClInclude Include="City.h" />
     <ClInclude Include="consts.h" />
+    <ClInclude Include="Environment.h" />
     <ClInclude Include="Mayor.h" />
     <ClInclude Include="Robot.h" />
     <ClInclude Include="Tree.h" />

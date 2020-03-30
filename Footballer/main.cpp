@@ -10,7 +10,6 @@ int main(void)
 	RenderWindow* pWindow = new RenderWindow(VideoMode(WIDTH, HEIGHT), "Footballer", Style::Default); // window
 	unique_ptr<Mayor> pM(new Mayor());
 	unique_ptr<City> pC(new City());
-	unique_ptr<Ball> pB(new Ball("img/mini_ball.png"));
 
 	float PosX{ 0 }, PosY{ 0 };
 
@@ -70,6 +69,8 @@ int main(void)
 		}
 		else if (state == STATE::CROSSING)
 		{
+			srand((unsigned int)time(0)); // use new seed
+
 			pM->crossPopulation();
 			state = STATE::SIMULATING;
 		}

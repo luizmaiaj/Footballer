@@ -2,7 +2,7 @@
 
 Mayor::Mayor()
 {
-
+	m_pEnv = new Environment();
 }
 
 Mayor::~Mayor()
@@ -13,6 +13,8 @@ Mayor::~Mayor()
 
 		if (pR) delete pR;
 	}
+
+	if (m_pEnv) delete m_pEnv;
 }
 
 uint Mayor::loadPopulation()
@@ -37,7 +39,7 @@ uint Mayor::createPopulation(uint aPopulation)
 
 	for (uint i = m_robots.size(); i < aPopulation; i++)
 	{
-		Robot* pR = new Robot(); // new robot
+		Robot* pR = new Robot(m_pEnv); // new robot
 
 		pR->birth(); // allocate the random tree
 
@@ -78,6 +80,8 @@ void Mayor::draw(RenderWindow* pWindow)
 		Robot* pR = *it;
 
 		pWindow->draw(*pR);
+
+		pWindow->draw(*pR->getBall());
 	}
 }
 
