@@ -95,28 +95,34 @@ uint Mayor::createPopulation(uint aPopulation, uint aCrossing)
 
 uint Mayor::crossPopulation()
 {
-	float lMax{ 0 };
-	float lTemp{ 0 };
+	float fMax{ 0 };
+	float fTemp{ 0 };
+	float fAvg{ 0 };
 
 	// get maximum fitness
 	for (itRobot it = m_robots.begin(); it != m_robots.end(); it++)
 	{
 		Robot* pR = *it;
 
-		lTemp = pR->getFitness();
+		fTemp = pR->getFitness();
 
-		if (lTemp > lMax) lMax = lTemp;
+		fAvg += fTemp;
+
+		if (fTemp > fMax) fMax = fTemp;
 	}
 
-	printf("Max fit: %.3f\n", lMax);
+	fAvg /= m_robots.size();
+
+	printf("%d: Max: %.2f; Avg: %.2f\n", m_generation, fMax, fAvg);
+	m_generation++;
 
 	// remove 70% less performing
-	lMax *= 0.7f;
+	fMax *= 0.7f;
 	for (itRobot it = m_robots.begin(); it != m_robots.end(); )
 	{
 		Robot* pR = *it;
 
-		if (pR->getFitness() < lMax)
+		if (pR->getFitness() < fMax)
 		{
 			it = m_robots.erase(it);
 			delete pR;

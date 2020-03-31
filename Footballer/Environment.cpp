@@ -37,45 +37,61 @@ bool Environment::collision(float aPosX, float aPosY)
 	return (m_matriz[(uint)aPosX][(uint)aPosY] == 1);
 }
 
-void Environment::reflection(float aPosX, float aPosY, float& aAngle)
+void Environment::reflection(float& aPosX, float& aPosY, float& aAngle)
 {
-	bool bUp = false, bDown = false, bLeft = false, bRight = false;
-	WALL wallDir = WALL::TOP;
+	bool bUp = m_matriz[(uint)aPosX][(uint)(((aPosY - 1) < 1) ? 0 : aPosY - 1)] == 1;
+	bool bDown = m_matriz[(uint)aPosX][(uint)(((aPosY + 1) > (HEIGHT - 2)) ? HEIGHT - 1 : aPosY + 1)] == 1;
+	bool bLeft = m_matriz[(uint)(((aPosX - 1) < 1) ? 0 : aPosX - 1)][(uint)aPosY] == 1;
+	bool bRight = m_matriz[(uint)(((aPosX + 1) > (WIDTH - 2)) ? WIDTH - 1 : aPosX + 1)][(uint)aPosY] == 1;
 
-	bUp = m_matriz[(uint)aPosX][(uint)(((aPosY - 1) < 1) ? 0 : aPosY - 1)] == 1;
-	bDown = m_matriz[(uint)aPosX][(uint)(((aPosY + 1) > (HEIGHT - 2)) ? HEIGHT - 1 : aPosY + 1)] == 1;
-	bLeft = m_matriz[(uint)(((aPosX - 1) < 1) ? 0 : aPosX - 1)][(uint)aPosX] == 1;
-	bRight = m_matriz[(uint)(((aPosX + 1) > (WIDTH - 2)) ? WIDTH - 1 : aPosX + 1)][(uint)aPosX] == 1;
+	if (bUp && bDown && bLeft && bRight) // manage corners
+	{
+		aAngle += 180;
+		aPosX = (aPosX < 1) ? 1.f : WIDTH - 2.f;
+		aPosY = (aPosY < 1) ? 1.f : HEIGHT - 2.f;
+
+		return;
+	}
 
 	int remainder = (int)aAngle;
 	float save = aAngle - remainder;
 	remainder %= 360;
 	aAngle = remainder + save;
 
+	// manage external and internal walls
 	if (!bUp) // should reflect up
 	{
-		if (aAngle < 90)
+		aPosY--;
+
+		if (aAngle < 270)
 			aAngle -= 90;
 		else
 			aAngle += 90;
 	}
 	if (!bDown) // should reflect down
 	{
-		if (aAngle < 270)
+		aPosY++;
+
+		if (aAngle < 90)
 			aAngle -= 90;
 		else
 			aAngle += 90;
 	}
 	if (!bLeft) // should reflect left
 	{
-		if (aAngle < 0)
+		aPosX--;
+
+		if (aAngle < 180)
 			aAngle += 90;
 		else
 			aAngle -= 90;
+
 	}
 	if (!bRight) // should reflect right
 	{
-		if (aAngle < 180)
+		aPosX++;
+
+		if (aAngle < 0)
 			aAngle += 90;
 		else
 			aAngle -= 90;

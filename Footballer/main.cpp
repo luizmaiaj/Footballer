@@ -21,6 +21,8 @@ int main(void)
 	Sprite* pSpriteBlock[BLOCKS];
 	pC->getBlocks(pSpriteBlock);
 
+	bool bDraw = true;
+
 	while (pWindow->isOpen())
 	{
 		Time dt = clock.restart(); // Update the delta time
@@ -33,6 +35,8 @@ int main(void)
 			{
 			case Event::KeyPressed:
 				if (event.key.code == Keyboard::Escape) pWindow->close(); //close window
+
+				if (event.key.code == Keyboard::Num1) bDraw = !bDraw;
 				
 				if (state == STATE::WAITING)
 				{
@@ -50,13 +54,13 @@ int main(void)
 			}
 		}
 
-		if (state == STATE::SIMULATING)
+		float delta = dt.asSeconds();
+
+		if (!pM->update(delta)) // update the position of all individuals and balls
+			state = STATE::CROSSING; // if all individuals have been executed till the limit MOVES
+
+		if (state == STATE::SIMULATING && bDraw)
 		{
-			float delta = dt.asSeconds();
-
-			if (!pM->update(delta))
-				state = STATE::CROSSING; // if all individuals have been executed till the limit MOVES
-
 			pWindow->clear(); // Clear everything from the last frame
 			pWindow->draw(*pC->getBG()); // background
 

@@ -23,5 +23,6 @@ private:
 
 	listRobot m_robots;
 	Environment* m_pEnv{ nullptr };
+	uint m_generation{ 0 };
 };
 

@@ -7,7 +7,7 @@ class Environment
 public:
 	Environment();
 	bool collision(float aPosX, float aPosY);
-	void reflection(float aPosX, float aPosY, float& aAngle);
+	void reflection(float& aPosX, float& aPosY, float& aAngle);
 	void genCoord(float& aPosX, float& aPosY, float& aAngle);
 
 private:
