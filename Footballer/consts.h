@@ -15,7 +15,7 @@ typedef unsigned int uint;
 typedef unsigned char uchar;
 
 constexpr uint GENERATIONS = 50;							//NUMERO DE GERACOES;
-constexpr uint POPULATION = 2000;							//TAMANHO DA POPULACAO;
+constexpr uint POPULATION = 4;							//TAMANHO DA POPULACAO;
 constexpr uint CROSSING = (uint)(POPULATION * 0.7f); //70% DA POPULACAO;
 constexpr uint REPRODUCTION = POPULATION - CROSSING;        //30% DA POPULACAO;
 constexpr uint HEIGHT = 200;								//ALTURA DA MATRIZ;
@@ -31,6 +31,6 @@ constexpr double C_PI = 3.14159265358979323846; // pi;
 constexpr double C_PI_180 = C_PI / 180; // pi divided by 180 degrees
 constexpr double C_180_PI = 180 / C_PI; // 180 degrees divided by pi
 
-enum class LEAF {PROGN3, PROGN2, IFWALL, ALIGN, FRONT, BACK, LEFT, RIGHT};
+enum class LEAF { PROGN3, PROGN2, IFWALL, ALIGN, FRONT, BACK, LEFT, RIGHT };
 enum class WALL { TOP, BOTTOM, LEFT, RIGHT, TOPLEFT, TOPRIGHT, BOTTOMLEFT, BOTTOMRIGHT };
 enum class STATE {WAITING, SIMULATING, CROSSING};

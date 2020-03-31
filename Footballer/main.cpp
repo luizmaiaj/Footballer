@@ -22,6 +22,7 @@ int main(void)
 	pC->getBlocks(pSpriteBlock);
 
 	bool bDraw = true;
+	bool bExit = false;
 
 	while (pWindow->isOpen())
 	{
@@ -34,7 +35,7 @@ int main(void)
 			switch (event.type)
 			{
 			case Event::KeyPressed:
-				if (event.key.code == Keyboard::Escape) pWindow->close(); //close window
+				if (event.key.code == Keyboard::Escape) bExit = true;
 
 				if (event.key.code == Keyboard::Num1) bDraw = !bDraw;
 				
@@ -73,6 +74,13 @@ int main(void)
 		}
 		else if (state == STATE::CROSSING)
 		{
+			if (bExit)
+			{
+				pM->savePopulation();
+
+				pWindow->close(); //close window
+			}
+
 			srand((unsigned int)time(0)); // use new seed
 
 			pM->crossPopulation();

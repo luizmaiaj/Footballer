@@ -17,6 +17,7 @@ public:
 	unsigned long getSize() { return m_size; };
 	Tree* getRoot() { return m_start; };
 	Sprite* getBall() { return m_pBall; };
+	string getString();
 
 private:
 	void initTexture();

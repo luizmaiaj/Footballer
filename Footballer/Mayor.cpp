@@ -1,4 +1,5 @@
 #include "Mayor.h"
+#include <stdio.h>
 
 Mayor::Mayor()
 {
@@ -93,9 +94,31 @@ uint Mayor::createPopulation(uint aPopulation, uint aCrossing)
 	return aPopulation;
 }
 
+uint Mayor::savePopulation()
+{
+	float fCut = m_lastMax * .7f;
+	uint i = 0;
+	char filename[256] = { '\0' };
+
+	for (itRobot it = m_robots.begin(); it != m_robots.end(); it++)
+	{
+		sprintf_s(filename, sizeof(filename), "ind/ind%03d.foot", i++);
+
+		Robot* pR = *it;
+
+		if (pR->getFitness() > fCut)
+		{
+			std::ofstream outputFile(filename);
+			outputFile << pR->getString();
+			outputFile.close();
+		}
+	}
+
+	return uint();
+}
+
 uint Mayor::crossPopulation()
 {
-	float fMax{ 0 };
 	float fTemp{ 0 };
 	float fAvg{ 0 };
 
@@ -108,30 +131,37 @@ uint Mayor::crossPopulation()
 
 		fAvg += fTemp;
 
-		if (fTemp > fMax) fMax = fTemp;
+		if (fTemp > m_lastMax) m_lastMax = fTemp;
 	}
 
 	fAvg /= m_robots.size();
 
-	printf("%d: Max: %.2f; Avg: %.2f\n", m_generation, fMax, fAvg);
+	printf("%d: Max: %.2f; Avg: %.2f", m_generation, m_lastMax, fAvg);
 	m_generation++;
 
 	// remove 70% less performing
-	fMax *= 0.7f;
+	float fCut = m_lastMax * 0.7f;
+	fAvg = 0.f;
 	for (itRobot it = m_robots.begin(); it != m_robots.end(); )
 	{
 		Robot* pR = *it;
 
-		if (pR->getFitness() < fMax)
+		fTemp = pR->getFitness();
+
+		if (fTemp < fCut)
 		{
 			it = m_robots.erase(it);
 			delete pR;
 		}
 		else
 		{
+			fAvg += fTemp;
 			it++;
 		}
 	}
+
+	fAvg /= m_robots.size();
+	printf("; Best Avg: %.2f\n", fAvg);
 
 	// create offspring
 	listRobot offspring;

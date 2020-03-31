@@ -86,11 +86,11 @@ bool Robot::execute(float aDelta)
 		break;
 	case LEAF::LEFT:
 		m_angle += ANGLE;
-		m_fitness++;
+		//m_fitness++;
 		break;
 	case LEAF::RIGHT:
 		m_angle -= ANGLE;
-		m_fitness++;
+		//m_fitness++;
 		break;
 	default:
 		break;
@@ -188,6 +188,11 @@ void Robot::resetTree()
 	m_start->reset(false);
 
 	m_cursor = m_start;
+}
+
+string Robot::getString()
+{
+	return m_start->getString();
 }
 
 void Robot::initTexture()

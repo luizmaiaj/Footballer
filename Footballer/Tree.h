@@ -17,6 +17,7 @@ public:
 	bool wasRun();
 	void reset(bool bResetTo);
 	LEAF randomLeaf();
+	string getString();
 
 private:
 	Tree* load(Tree* pointer);

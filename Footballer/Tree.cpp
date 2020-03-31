@@ -63,6 +63,18 @@ LEAF Tree::randomLeaf()
 	return randLeaf;
 }
 
+string Tree::getString()
+{
+	string s;
+	s = 48 + (char)m_info;
+
+	if (m_left) s += m_left->getString();
+	if (m_center) s += m_center->getString();
+	if (m_right) s += m_right->getString();
+
+	return s;
+}
+
 Tree* Tree::getPoint(unsigned long aPoint)
 {
 	if (m_id == aPoint)
