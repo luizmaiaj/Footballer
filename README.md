@@ -1,5 +1,8 @@
 # Footballer
-Genetic programmed footballer
+Genetically programmed footballer
+
+The description below is to be updated
+
 /*
  ******************************************************************************************************
  SEGUIR BOLA, BOLA REFLETE COM DISTANCIA CONSTANTE, FUNCAO DE DESVIO DE PAREDES, FITNESS COM HITS
