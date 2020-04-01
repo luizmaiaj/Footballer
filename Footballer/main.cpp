@@ -58,7 +58,9 @@ int main(void)
 		float delta = dt.asSeconds();
 
 		if (!pM->update(delta)) // update the position of all individuals and balls
+		{
 			state = STATE::CROSSING; // if all individuals have been executed till the limit MOVES
+		}
 
 		if (state == STATE::SIMULATING && bDraw)
 		{

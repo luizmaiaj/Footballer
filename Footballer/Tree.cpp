@@ -20,8 +20,6 @@ void Tree::create(Tree* pTree, unsigned long &aSize, Tree* pParent)
 
 	m_info = (pParent) ? pParent->getInfo() : randomLeaf();
 
-	//printf("%d:%d, ", m_id, m_info);
-
 	switch (m_info)
 	{
 	case LEAF::PROGN3:
@@ -73,6 +71,19 @@ string Tree::getString()
 	if (m_right) s += m_right->getString();
 
 	return s;
+}
+
+void Tree::mutate()
+{
+	if (m_left) delete m_left;
+	if (m_center) delete m_center;
+	if (m_right) delete m_right;
+
+	m_left = nullptr;
+	m_center = nullptr;
+	m_right = nullptr;
+
+	create(m_top, ++m_id, nullptr);
 }
 
 Tree* Tree::getPoint(unsigned long aPoint)
@@ -148,10 +159,11 @@ Tree* Tree::getNext(LEAF aDirection)
 	if (!m_bRun)
 		return this;
 
-	if (aDirection == LEAF::RIGHT)
-		m_left->reset(true);
+	unsigned long size;
+	if (aDirection == LEAF::RIGHT) // to set the the size not to be executed by ifwall
+		m_left->reset(true, size);
 	else if (aDirection == LEAF::LEFT)
-		m_right->reset(true);
+		m_right->reset(true, size);
 
 
 	if (m_left)
@@ -177,11 +189,13 @@ bool Tree::wasRun()
 	return m_bRun;
 }
 
-void Tree::reset(bool bResetTo)
+void Tree::reset(bool bResetTo, unsigned long& aSize)
 {
-	if (m_left) m_left->reset(bResetTo);
-	if (m_center) m_center->reset(bResetTo);
-	if (m_right) m_right->reset(bResetTo);
+	m_id = ++aSize;
+
+	if (m_left) m_left->reset(bResetTo, aSize);
+	if (m_center) m_center->reset(bResetTo, aSize);
+	if (m_right) m_right->reset(bResetTo, aSize);
 
 	m_bRun = bResetTo;
 }

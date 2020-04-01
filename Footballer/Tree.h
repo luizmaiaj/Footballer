@@ -15,9 +15,10 @@ public:
 	Tree* getNext(LEAF aDirection);
 	void run();
 	bool wasRun();
-	void reset(bool bResetTo);
+	void reset(bool bResetTo, unsigned long& aSize);
 	LEAF randomLeaf();
 	string getString();
+	void mutate();
 
 private:
 	Tree* load(Tree* pointer);

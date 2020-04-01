@@ -12,6 +12,7 @@ public:
 	void move();
 	void hit(float aAngle) { m_angle = aAngle; m_moves = 40; };
 	void reset(float aPosX, float aPosY);
+	void getStart(float& aPosX, float& aPosY) { aPosX = m_startX; aPosY = m_startY; };
 
 private:
 	float m_startY{ 0 };

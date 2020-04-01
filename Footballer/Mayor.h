@@ -23,6 +23,10 @@ public:
 private:
 	uint createPopulation(uint aPopulation);
 	void resetPopulation();
+	float getAvg();
+	float eraseWorst(float aCut);
+	void createOffspring();
+	void mutatePopulation(float aRate);
 
 	listRobot m_robots;
 	Environment* m_pEnv{ nullptr };

@@ -33,8 +33,8 @@ uint Mayor::createPopulation(uint aPopulation)
 		do
 		{
 			Robot* pR = m_robots.back();
-			delete pR;
 			m_robots.pop_back();
+			delete pR;
 		} while (m_robots.size() > aPopulation);
 	}
 
@@ -59,6 +59,116 @@ void Mayor::resetPopulation()
 	}
 }
 
+// gets average and updates last maximum
+float Mayor::getAvg()
+{
+	float fTemp = 0.f;
+	float fAvg = 0.f;
+
+	// get maximum fitness
+	for (itRobot it = m_robots.begin(); it != m_robots.end(); it++)
+	{
+		Robot* pR = *it;
+
+		fTemp = pR->getFitness();
+
+		fAvg += fTemp;
+
+		if (fTemp > m_lastMax) m_lastMax = fTemp;
+	}
+
+	fAvg /= m_robots.size();
+
+	return fAvg;
+}
+
+float Mayor::eraseWorst(float aCut)
+{
+	// remove 70% less performing
+	float fCut = m_lastMax * aCut;
+	float fAvg = 0.f;
+	float fTemp = 0.f;
+	for (itRobot it = m_robots.begin(); it != m_robots.end(); )
+	{
+		Robot* pR = *it;
+
+		fTemp = pR->getFitness();
+
+		if (fTemp < fCut)
+		{
+			it = m_robots.erase(it);
+			delete pR;
+		}
+		else
+		{
+			fAvg += fTemp;
+			it++;
+		}
+	}
+
+	fAvg /= m_robots.size();
+
+	return fAvg;
+}
+
+// creates offspring based on the remaining best individuals
+void Mayor::createOffspring()
+{
+	// create offspring
+	listRobot offspring;
+	for (itRobot it = m_robots.begin(); it != m_robots.end(); )
+	{
+		Robot* pRFather = *it++;
+
+		if (it == m_robots.end()) break; // leave if there are no sufficient parents
+
+		Robot* pRMother = *it++;
+
+		Robot* pSon{ nullptr };
+		Robot* pDaughter{ nullptr };
+
+		pRFather->cross(pRMother, &pSon, &pDaughter);
+
+		offspring.push_back(pSon);
+		offspring.push_back(pDaughter);
+	}
+
+	// add offsprings to the robot list
+	for (itRobot it = offspring.begin(); it != offspring.end(); it++)
+	{
+		Robot* pR = *it;
+
+		m_robots.push_back(pR);
+	}
+}
+
+void Mayor::mutatePopulation(float aRate)
+{
+	// create offspring
+	listRobot offspring;
+	for (itRobot it = m_robots.begin(); it != m_robots.end(); it++)
+	{
+		Robot* pR = *it;
+
+		if (pR->getFitness() > (m_lastMax * aRate))
+		{
+			Robot* pSon{ nullptr };
+
+			pR->mutate(&pSon);
+
+			offspring.push_back(pSon);
+		}
+	}
+
+	// add offsprings to the robot list
+	for (itRobot it = offspring.begin(); it != offspring.end(); it++)
+	{
+		Robot* pR = *it;
+
+		m_robots.push_back(pR);
+	}
+}
+
 bool Mayor::update(float aDelta)
 {
 	bool bEnd{ false };
@@ -69,6 +179,16 @@ bool Mayor::update(float aDelta)
 
 		if (pR->execute(aDelta))
 			bEnd = true;
+	}
+
+	if (bEnd) // udpate the fitness if it's the end of the population execution
+	{ 
+		for (itRobot it = m_robots.begin(); it != m_robots.end(); it++)
+		{
+			Robot* pR = *it;
+
+			pR->updateFitness();
+		}
 	}
 
 	return bEnd;
@@ -108,6 +228,8 @@ uint Mayor::savePopulation()
 
 		if (pR->getFitness() > fCut)
 		{
+			uint size = pR->getSize();
+
 			std::ofstream outputFile(filename);
 			outputFile << pR->getString();
 			outputFile.close();
@@ -119,76 +241,21 @@ uint Mayor::savePopulation()
 
 uint Mayor::crossPopulation()
 {
-	float fTemp{ 0 };
-	float fAvg{ 0 };
-
-	// get maximum fitness
-	for (itRobot it = m_robots.begin(); it != m_robots.end(); it++)
-	{
-		Robot* pR = *it;
-
-		fTemp = pR->getFitness();
-
-		fAvg += fTemp;
-
-		if (fTemp > m_lastMax) m_lastMax = fTemp;
-	}
-
-	fAvg /= m_robots.size();
+	float fAvg = getAvg();
+	float fTemp = 0.f;
 
 	printf("%d: Max: %.2f; Avg: %.2f", m_generation, m_lastMax, fAvg);
 	m_generation++;
 
-	// remove 70% less performing
-	float fCut = m_lastMax * 0.7f;
-	fAvg = 0.f;
-	for (itRobot it = m_robots.begin(); it != m_robots.end(); )
-	{
-		Robot* pR = *it;
-
-		fTemp = pR->getFitness();
-
-		if (fTemp < fCut)
-		{
-			it = m_robots.erase(it);
-			delete pR;
-		}
-		else
-		{
-			fAvg += fTemp;
-			it++;
-		}
-	}
-
-	fAvg /= m_robots.size();
+	fAvg = eraseWorst(0.5f);
 	printf("; Best Avg: %.2f\n", fAvg);
+	printf("After erase: %d\n", m_robots.size());
 
-	// create offspring
-	listRobot offspring;
-	for (itRobot it = m_robots.begin(); it != m_robots.end(); )
-	{
-		Robot* pRFather = *it++;
+	createOffspring();
+	printf("After cross: %d\n", m_robots.size());
 
-		if (it == m_robots.end()) break; // leave if there are no sufficient parents
-
-		Robot* pRMother = *it++;
-
-		Robot* pSon{ nullptr };
-		Robot* pDaughter{ nullptr };
-
-		pRFather->cross(pRMother, &pSon, &pDaughter);
-
-		offspring.push_back(pSon);
-		offspring.push_back(pDaughter);
-	}
-
-	// add offsprings to the robot list
-	for (itRobot it = offspring.begin(); it != offspring.end(); it++)
-	{
-		Robot* pR = *it;
-
-		m_robots.push_back(pR);
-	}
+	mutatePopulation(0.7f);
+	printf("After mutate: %d\n", m_robots.size());
 
 	createPopulation(POPULATION);
 	resetPopulation();
