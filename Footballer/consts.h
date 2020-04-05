@@ -15,7 +15,7 @@ typedef unsigned int uint;
 typedef unsigned char uchar;
 
 constexpr uint GENERATIONS = 50;							//NUMERO DE GERACOES;
-constexpr uint POPULATION = 200;							//TAMANHO DA POPULACAO;
+constexpr uint POPULATION = 500;							//TAMANHO DA POPULACAO;
 constexpr uint CROSSING = (uint)(POPULATION * 0.7f);		//70% DA POPULACAO;
 constexpr uint REPRODUCTION = POPULATION - CROSSING;        //30% DA POPULACAO;
 constexpr uint HEIGHT = 200;								//ALTURA DA MATRIZ;
